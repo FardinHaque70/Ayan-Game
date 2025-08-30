@@ -1,0 +1,208 @@
+[gd_scene load_steps=20 format=3 uid="uid://cm3h8tgs8u5on"]
+
+[ext_resource type="Texture2D" uid="uid://cu3qq03488hs8" path="res://Skybox/Sky 02.jpg" id="1_58igv"]
+[ext_resource type="Material" uid="uid://c24hkk5xa8cqe" path="res://Materials/Ground.tres" id="1_vrd06"]
+[ext_resource type="Material" uid="uid://bcogk6xj3mukj" path="res://Materials/Player.tres" id="2_k2aq1"]
+[ext_resource type="Material" uid="uid://wf0rts8ss4x1" path="res://Materials/Goal Post Pillers.tres" id="3_pskrv"]
+[ext_resource type="Material" uid="uid://78w57x65msvr" path="res://Materials/Goal Post.tres" id="4_58igv"]
+[ext_resource type="Script" uid="uid://cdtx04rop61pw" path="res://Scripts/Trajectory.gd" id="6_pusve"]
+[ext_resource type="Script" uid="uid://bpuhggo4rjojw" path="res://Scripts/TrajectoryGizmo.gd" id="7_gqb3i"]
+[ext_resource type="Script" uid="uid://b8u2yw8cogkf6" path="res://Scripts/BallFollower.gd" id="7_yqu6c"]
+[ext_resource type="PackedScene" uid="uid://bk2je7o1kom13" path="res://Prefabs/obstacle.tscn" id="9_wnni2"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_pusve"]
+panorama = ExtResource("1_58igv")
+
+[sub_resource type="Sky" id="Sky_gqb3i"]
+sky_material = SubResource("PanoramaSkyMaterial_pusve")
+
+[sub_resource type="Environment" id="Environment_yqu6c"]
+background_mode = 2
+background_energy_multiplier = 1.17
+sky = SubResource("Sky_gqb3i")
+reflected_light_source = 2
+tonemap_mode = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kgkjt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wnni2"]
+size = Vector3(2.02954, 1, 1.90527)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_kgkjt"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_wnni2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pusve"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_wnni2"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_c8c3f"]
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_yqu6c")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0, 0, 0)
+material_override = ExtResource("1_vrd06")
+mesh = SubResource("PlaneMesh_kgkjt")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_wnni2")
+
+[node name="Player" type="Node3D" parent="."]
+
+[node name="Visual" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = ExtResource("2_k2aq1")
+mesh = SubResource("CapsuleMesh_kgkjt")
+
+[node name="Feet" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.553619, 0.314528, -0.911968)
+
+[node name="Ball" type="MeshInstance3D" parent="Player/Feet"]
+transform = Transform3D(0.723285, 0, 0, 0, 0.723285, 0, 0, 0, 0.723285, 0, 0, 0)
+mesh = SubResource("SphereMesh_wnni2")
+
+[node name="Goal Post" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -24.065)
+
+[node name="Post Left" type="MeshInstance3D" parent="Goal Post"]
+transform = Transform3D(0.25, 0, 0, 0, 3, 0, 0, 0, 0.25, -3, 1.5, 0)
+material_override = ExtResource("3_pskrv")
+mesh = SubResource("BoxMesh_pusve")
+
+[node name="Floor" type="MeshInstance3D" parent="Goal Post"]
+transform = Transform3D(5.77, 0, 0, 0, 3, 0, 0, 0, 0.25, 0, 1.5, 0)
+material_override = ExtResource("4_58igv")
+cast_shadow = 0
+mesh = SubResource("BoxMesh_pusve")
+
+[node name="Post Left2" type="MeshInstance3D" parent="Goal Post"]
+transform = Transform3D(0.25, 0, 0, 0, 3.23501, -0.176777, 0, 3.23501, 0.176777, -3, 1.5, -1.6)
+material_override = ExtResource("3_pskrv")
+mesh = SubResource("BoxMesh_pusve")
+
+[node name="Post Right" type="MeshInstance3D" parent="Goal Post"]
+transform = Transform3D(0.25, 0, 0, 0, 3, 0, 0, 0, 0.25, 3, 1.5, 0)
+material_override = ExtResource("3_pskrv")
+mesh = SubResource("BoxMesh_pusve")
+
+[node name="Post Right2" type="MeshInstance3D" parent="Goal Post"]
+transform = Transform3D(0.25, 0, 0, 0, 3.23501, -0.176777, 0, 3.23501, 0.176777, 3, 1.5, -1.6)
+material_override = ExtResource("3_pskrv")
+mesh = SubResource("BoxMesh_pusve")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.993658, 0, 0.11244, 0, 1, 0, -0.11244, 0, 0.993658, 1.82243, 1.78811, 3.16371)
+fov = 93.5
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.573613, -0.133053, 0.808248, -0.56308, 0.65257, 0.507044, -0.594902, -0.745955, 0.299403, 0, 4.80897, 0)
+light_energy = 1.35
+light_specular = 2.963
+shadow_enabled = true
+
+[node name="Trajectory" type="Node3D" parent="."]
+script = ExtResource("6_pusve")
+player_path = NodePath("../Player/Feet")
+goal_path = NodePath("../Goal Post")
+cubes_mmi_path = NodePath("MultiMeshInstance3D")
+goal_local_x_range = Vector2(-3, 3)
+goal_local_y_range = Vector2(0, 3)
+anchor_offset_max = 6.87
+bezier_handle_strength = 1.0
+cube_size = 0.5
+ball_radius = 0.3
+ball_speed = 30.0
+initial_boost_speed = 12.0
+
+[node name="Ball Follower" type="Node3D" parent="Trajectory"]
+script = ExtResource("7_yqu6c")
+target_speed = 100.0
+steer_strength = 300.0
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="Trajectory"]
+
+[node name="Trajectory Gizmos" type="Node3D" parent="Trajectory"]
+script = ExtResource("7_gqb3i")
+player_path = NodePath("../../Player")
+goal_path = NodePath("../../Goal Post")
+goal_local_y_range = Vector2(-0.19, 1.61)
+
+[node name="_PreviewGizmo" type="MeshInstance3D" parent="Trajectory/Trajectory Gizmos"]
+cast_shadow = 0
+mesh = SubResource("ImmediateMesh_wnni2")
+
+[node name="@MeshInstance3D@71582" type="MeshInstance3D" parent="Trajectory/Trajectory Gizmos"]
+cast_shadow = 0
+mesh = SubResource("ImmediateMesh_c8c3f")
+
+[node name="Obstacles" type="Node3D" parent="."]
+
+[node name="Obstacle" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.180701, 0.698516, -6.85877)
+
+[node name="Obstacle2" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06149, 0.698516, -6.85877)
+
+[node name="Obstacle3" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.29049, 0.698516, -6.85877)
+
+[node name="Obstacle4" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51784, 0.698516, -6.85877)
+
+[node name="Obstacle5" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169524, 1.20124, -6.83467)
+
+[node name="Obstacle6" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07267, 1.20124, -6.83467)
+
+[node name="Obstacle7" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.30167, 1.20124, -6.83467)
+
+[node name="Obstacle8" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.52902, 1.20124, -6.83467)
+
+[node name="Obstacle9" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.169524, 2.41065, -6.83467)
+
+[node name="Obstacle13" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.427367, 0.698516, -6.85877)
+
+[node name="Obstacle14" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.438544, 1.20124, -6.83467)
+
+[node name="Obstacle15" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.438544, 2.41065, -6.83467)
+
+[node name="Obstacle16" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.59203, 0.698516, -6.85877)
+
+[node name="Obstacle17" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.60321, 1.20124, -6.83467)
+
+[node name="Obstacle18" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.60321, 2.41065, -6.83467)
+
+[node name="Obstacle19" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.96993, 0.698516, -6.85877)
+
+[node name="Obstacle20" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98111, 1.20124, -6.83467)
+
+[node name="Obstacle21" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98111, 2.41065, -6.83467)
+
+[node name="Obstacle10" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07267, 2.41065, -6.83467)
+
+[node name="Obstacle11" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.30167, 2.41065, -6.83467)
+
+[node name="Obstacle12" parent="Obstacles" instance=ExtResource("9_wnni2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.52902, 2.41065, -6.83467)
